@@ -2,6 +2,7 @@ import streamlit as st
 from google.cloud import documentai_v1 as documentai
 from google.oauth2 import service_account
 import json
+import os
 
 # Reemplaza esto con tus propios valores
 RUTA_CREDENCIALES = '/Users/thom/Downloads/nuu-test-env-key.json'
@@ -10,9 +11,15 @@ LOCATION = 'us'  # Ejemplo: 'us' o 'eu'
 PROCESSOR_ID = '32887d894d024eb'  # Encuentra esto en tu consola de Document AI
 
 # Autenticación con Google Cloud
-credentials = service_account.Credentials.from_service_account_file(RUTA_CREDENCIALES)
-client = documentai.DocumentProcessorServiceClient(credentials=credentials)
+# Obten las credenciales de la variable de entorno
+credenciales_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+print(credenciales_json)
+credenciales_dict = json.loads(credenciales_json)
 
+credentials = service_account.Credentials.from_service_account_info(credenciales_dict)
+
+# credentials = service_account.Credentials.from_service_account_file(RUTA_CREDENCIALES)
+client = documentai.DocumentProcessorServiceClient(credentials=credentials)
 
 def procesar_documento(file):
     nombre_procesador = client.processor_path(PROJECT_ID, LOCATION, PROCESSOR_ID)
