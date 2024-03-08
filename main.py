@@ -11,15 +11,15 @@ LOCATION = 'us'  # Ejemplo: 'us' o 'eu'
 PROCESSOR_ID = '32887d894d024eb'  # Encuentra esto en tu consola de Document AI
 
 # Autenticación con Google Cloud
-# Obten las credenciales de la variable de entorno
-credenciales_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
-print(credenciales_json)
-credenciales_dict = json.loads(credenciales_json)
+# Obtén las credenciales de la variable de entorno
 
-credentials = service_account.Credentials.from_service_account_info(credenciales_dict)
+# credenciales_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+# credenciales_dict = json.loads(credenciales_json)
+# credentials = service_account.Credentials.from_service_account_info(credenciales_dict)
 
-# credentials = service_account.Credentials.from_service_account_file(RUTA_CREDENCIALES)
+credentials = service_account.Credentials.from_service_account_file(RUTA_CREDENCIALES)
 client = documentai.DocumentProcessorServiceClient(credentials=credentials)
+
 
 def procesar_documento(file):
     nombre_procesador = client.processor_path(PROJECT_ID, LOCATION, PROCESSOR_ID)
@@ -65,8 +65,10 @@ def generar_json(datos_unicos):
     json_str = json.dumps(datos_unicos, ensure_ascii=False, indent=4)
     return json_str
 
-
 # Configuración inicial de Streamlit
+
+
+st.set_page_config(page_title="BIRMEX - Demo")
 st.image('https://raw.githubusercontent.com/mxabierto/assets/master/img/logos/birmex.png')
 
 uploaded_file = st.file_uploader("Elige un archivo PDF para procesar", type=['pdf'], accept_multiple_files=False)
